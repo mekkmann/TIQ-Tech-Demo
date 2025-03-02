@@ -2737,6 +2737,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3074602752916764488}
   - component: {fileID: 2672844917467233061}
+  - component: {fileID: 7725784012886726639}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2752,7 +2753,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4565931602819597640}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.99968976, z: -0, w: -0.024908297}
+  m_LocalRotation: {x: 0, y: 0.99968964, z: -0, w: -0.024911877}
   m_LocalPosition: {x: -12.56, y: -18.4, z: -6.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2784,6 +2785,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7725784012886726639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4565931602819597640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eac220159db7ac4d9cb8d6662fea26f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  baseMovementSpeed: 1
+  movementSpeedMultiplier: 2
+  _animator: {fileID: 2672844917467233061}
 --- !u!1 &4663458370057224387
 GameObject:
   m_ObjectHideFlags: 0
