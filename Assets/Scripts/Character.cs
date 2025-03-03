@@ -4,8 +4,6 @@ public abstract class Character : MonoBehaviour
 {
     [SerializeField] protected int maxHealth;
     [SerializeField] protected int currentHealth;
-    [SerializeField] protected float baseMovementSpeed;
-    [SerializeField] protected float movementSpeedMultiplier;
     protected bool isDead = false;
 
     public bool IsDead { get { return isDead; } }

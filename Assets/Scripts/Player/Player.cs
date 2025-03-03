@@ -1,48 +1,23 @@
+using UnityEngine;
+
 public class Player : Character
 {
-    private bool _isGrounded = false;
-    private bool _isRunning = false;
+    public PlayerControls PlayerControls { get; private set; }
 
     private void Awake()
     {
+        PlayerControls = new();
         currentHealth = maxHealth;
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.W))
-        //{
-        //    _animator.SetFloat("moveSpeed", 0.15f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    _animator.SetFloat("moveSpeed", 0.05f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    Die();
-        //}
-        //if (Input.GetKeyDown(KeyCode.LeftShift))
-        //{
-        //    _animator.SetBool("isRunning", true);
-        //}
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    _animator.SetTrigger("roll");
-        //}
+        GetComponent<PlayerMovement>().enabled = true;
+        GetComponent<PlayerCombat>().enabled = true;
     }
 
     protected override void Die()
     {
         if (isDead) return;
 
-
         base.Die();
+
+        GetComponent<Animator>().SetBool("isDead", isDead);
     }
 }

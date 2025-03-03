@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,32 +13,43 @@ public class PlayerMovement : MonoBehaviour
 
     private bool _isMoving;
 
+    #region Input
+    private InputAction _move;
+    private InputAction _roll;
+    #endregion
+
+    private void OnEnable()
+    {
+        PlayerControls temp = GetComponent<Player>().PlayerControls;
+        _move = temp.Player.Move;
+        _move.Enable();
+
+        _roll = temp.Player.Roll;
+        _roll.Enable();
+        _roll.performed += Roll;
+    }
+    private void OnDisable()
+    {
+        _move.Disable();
+        _roll.Disable();
+    }
+
     void Start()
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
     }
-
-    private void Update()
-    {
-        // TODO: Refactor roll input
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _animator.SetTrigger("roll");
-        }
-    }
-
     void FixedUpdate()
     {
-        // TODO: Refactor movement input
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
 
-        _movement.Set(horizontal, 0f, vertical);
+        // TODO: Try to see if movement can be transfered to inputaction callback
+        Vector2 tempMove = _move.ReadValue<Vector2>();
+
+        _movement.Set(tempMove.x, 0f, tempMove.y);
         _movement.Normalize();
 
-        bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
-        bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
+        bool hasHorizontalInput = !Mathf.Approximately(_movement.x, 0f);
+        bool hasVerticalInput = !Mathf.Approximately(_movement.y, 0f);
         _isMoving = hasHorizontalInput || hasVerticalInput;
         _animator.SetBool("isMoving", _isMoving);
 
@@ -54,6 +66,13 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody.MoveRotation(_rotation);
     }
 
+    #region Rolling
+    private void Roll(InputAction.CallbackContext context)
+    {
+        if (!_isMoving) return;
+
+        _animator.SetTrigger("roll");
+    }
     public void SetRollSpeed()
     {
         baseSpeed *= 2f;
@@ -62,4 +81,5 @@ public class PlayerMovement : MonoBehaviour
     {
         baseSpeed /= 2f;
     }
+    #endregion
 }
