@@ -2737,7 +2737,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3074602752916764488}
   - component: {fileID: 2672844917467233061}
+  - component: {fileID: 5669685322806420622}
   - component: {fileID: 7725784012886726639}
+  - component: {fileID: 6083845548711201235}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2785,6 +2787,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &5669685322806420622
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4565931602819597640}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &7725784012886726639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2802,6 +2831,19 @@ MonoBehaviour:
   baseMovementSpeed: 1
   movementSpeedMultiplier: 2
   _animator: {fileID: 2672844917467233061}
+--- !u!114 &6083845548711201235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4565931602819597640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4acaf4644af2ba944878c9506526dffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 20
 --- !u!1 &4663458370057224387
 GameObject:
   m_ObjectHideFlags: 0

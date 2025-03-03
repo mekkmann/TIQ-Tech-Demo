@@ -1,11 +1,7 @@
-using UnityEngine;
-
 public class Player : Character
 {
     private bool _isGrounded = false;
     private bool _isRunning = false;
-
-    [SerializeField] private Animator _animator;
 
     private void Awake()
     {
@@ -20,22 +16,26 @@ public class Player : Character
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            _animator.SetFloat("moveSpeed", 0.15f);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            _animator.SetFloat("moveSpeed", 0.05f);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Die();
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            _animator.SetBool("isRunning", true);
-        }
+        //if (Input.GetKeyDown(KeyCode.W))
+        //{
+        //    _animator.SetFloat("moveSpeed", 0.15f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    _animator.SetFloat("moveSpeed", 0.05f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    Die();
+        //}
+        //if (Input.GetKeyDown(KeyCode.LeftShift))
+        //{
+        //    _animator.SetBool("isRunning", true);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    _animator.SetTrigger("roll");
+        //}
     }
 
     protected override void Die()
@@ -44,7 +44,5 @@ public class Player : Character
 
 
         base.Die();
-
-        _animator.SetBool("isDead", isDead);
     }
 }
