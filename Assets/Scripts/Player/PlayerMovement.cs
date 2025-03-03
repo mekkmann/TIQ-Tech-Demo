@@ -39,10 +39,9 @@ public class PlayerMovement : MonoBehaviour
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
     }
+
     void FixedUpdate()
     {
-
-        // TODO: Try to see if movement can be transfered to inputaction callback
         Vector2 tempMove = _move.ReadValue<Vector2>();
 
         _movement.Set(tempMove.x, 0f, tempMove.y);
