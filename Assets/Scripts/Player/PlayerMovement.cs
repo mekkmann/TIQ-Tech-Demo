@@ -18,6 +18,13 @@ public class PlayerMovement : MonoBehaviour
     private InputAction _roll;
     #endregion
 
+    // CONSTRUCTOR
+    //public PlayerMovement(InputAction move, InputAction roll)
+    //{
+    //    _move = move;
+    //    _roll = roll;
+    //}
+
     private void OnEnable()
     {
         PlayerControls temp = GetComponent<Player>().PlayerControls;
