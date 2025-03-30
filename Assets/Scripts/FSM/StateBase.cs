@@ -4,7 +4,7 @@ using UnityEngine;
 // DON'T ALTER ANYTHING IN StateBase APART FROM HELPER METHODS
 public class StateBase
 {
-    public enum STATE { IDLE, PURSUIT, ATTACK, DEAD }
+    public enum STATE { IDLE, PURSUIT, LIGHTATTACK, DEAD }
     public enum EVENT { ENTER, UPDATE, EXIT }
 
     public STATE name;
@@ -66,18 +66,6 @@ public class StateBase
         return false;
 
     }
-    protected bool IsAnimationFinished(string animationName, int animationLayerIndex = 0)
-    {
-        AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(animationLayerIndex);
-
-        return animState.IsName(animationName) && animState.normalizedTime >= 1f;
-    }
-
-    protected bool IsAnimationPlaying(string animationName, int animationLayerIndex = 0)
-    {
-        AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(animationLayerIndex);
-        return animState.IsName(animationName);
-    }
 }
 // State Implementations
 public class Dead : StateBase
@@ -88,13 +76,13 @@ public class Dead : StateBase
     }
     public override void Enter()
     {
-        animator.SetBool("isDead", false);
+        animator.SetBool("isDead", true);
         base.Enter();
     }
 
-    // No updates for Dead-state
+    // No override for Update
 
-    // No exit for Dead-state
+    // No override for Exit
 }
 public class Idle : StateBase
 {
@@ -123,11 +111,11 @@ public class Idle : StateBase
         }
 
         // Condition to go to Attack from Idle
-        //if (npc.IsTargetInAcceptableDistance())
-        //{
-        //    nextState = new Attack(npc, animator, player);
-        //    stage = EVENT.EXIT;
-        //}
+        if (npc.IsTargetInAcceptableDistance())
+        {
+            nextState = new LightAttack(npc, animator, player, npc.AttackAnimation);
+            stage = EVENT.EXIT;
+        }
         #endregion
     }
 
@@ -150,15 +138,19 @@ public class Pursuit : StateBase
     }
     public override void Update()
     {
+        #region What we always want to do
         // What we always want to do in Pursuit
         npc.MoveToEntity(player);
+        #endregion
 
+        #region Conditional state changes
         // Condition to go Idle from Pursuit
         if (npc.IsTargetInAcceptableDistance())
         {
             nextState = new Idle(npc, animator, player);
             stage = EVENT.EXIT;
         }
+        #endregion
     }
     public override void Exit()
     {
@@ -166,28 +158,28 @@ public class Pursuit : StateBase
         base.Exit();
     }
 }
-public class Attack : StateBase
+public class LightAttack : StateBase
 {
-
-    public Attack(FSMEnemy npc, Animator animator, Transform player) : base(npc, animator, player)
+    float attackTimer = -1f;
+    public LightAttack(FSMEnemy npc, Animator animator, Transform player, AnimationClip animation) : base(npc, animator, player)
     {
-        name = STATE.ATTACK;
+        name = STATE.LIGHTATTACK;
+        attackTimer = animation.length;
     }
-
     public override void Enter()
     {
         animator.SetTrigger("lightAttack");
-        npc.MakeBusy();
         base.Enter();
     }
     public override void Update()
     {
-        // TODO: Implement attack
-        //if (!npc.IsBusyBool)
-        //{
-        //    nextState = new Idle(npc, animator, player);
-        //    stage = EVENT.EXIT;
-        //}
+        // TODO: Make it clean by finding a RELIABLE way of checking if animation has finished instead of using a timer
+        attackTimer -= Time.deltaTime;
+        if (attackTimer <= 0)
+        {
+            nextState = new Idle(npc, animator, player);
+            stage = EVENT.EXIT;
+        }
     }
     public override void Exit()
     {

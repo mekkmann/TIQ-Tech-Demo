@@ -15,6 +15,7 @@ public class FSMEnemy : MonoBehaviour
     [SerializeField] private float _visionAngle = 60f;
     [SerializeField] private string _targetTag = "Player";
     [SerializeField] private GameObject _target;
+    [SerializeField] public AnimationClip AttackAnimation;
 
     [Header("Stats")]
     [SerializeField] private float _moveSpeed = 4f;
