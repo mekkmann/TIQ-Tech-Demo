@@ -1971,6 +1971,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4144425384332597273}
+  - component: {fileID: 3729266864401819020}
+  - component: {fileID: 883217964382025667}
   - component: {fileID: 8402964864972273745}
   - component: {fileID: 4197358943548392889}
   - component: {fileID: 7431383568232263550}
@@ -1999,6 +2001,55 @@ Transform:
   - {fileID: 1115359097907860106}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3729266864401819020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688759004057259393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d91f73d55a65e45ad1738d7f9967f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actionState: 0
+  _stateCooldown: 0
+  _acceptableDistanceToTarget: 2
+  _reposition: 0
+  _currentDistanceToTarget: 0
+  _visionDistance: 20
+  _visionAngle: 60
+  _targetTag: Player
+  _target: {fileID: 0}
+  _walkSpeed: 1
+  _jogSpeed: 2.5
+  _rushSpeed: 4
+  _turnSpeed: 4
+  _isBusy: 0
+  _cantTurn: 0
+--- !u!195 &883217964382025667
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688759004057259393}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.1
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 2
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!95 &8402964864972273745
 Animator:
   serializedVersion: 7
@@ -2046,7 +2097,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!136 &7431383568232263550
 CapsuleCollider:
