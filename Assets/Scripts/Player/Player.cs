@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Player : Character
 {
+    private Animator _animator;
+    private Rigidbody _rb;
     public PlayerControls PlayerControls { get; private set; }
 
     private void Awake()
@@ -10,6 +12,7 @@ public class Player : Character
         currentHealth = maxHealth;
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<PlayerCombat>().enabled = true;
+        _animator = GetComponent<Animator>();
     }
 
     protected override void Die()
@@ -18,6 +21,6 @@ public class Player : Character
 
         base.Die();
 
-        GetComponent<Animator>().SetBool("isDead", isDead);
+        _animator.SetBool("isDead", isDead);
     }
 }

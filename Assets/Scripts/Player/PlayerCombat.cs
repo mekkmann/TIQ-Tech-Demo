@@ -28,6 +28,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void LightAttack(InputAction.CallbackContext context)
     {
+        if (GetComponent<PlayerMovement>().IsRolling) return;
         _animator.SetTrigger("lightAttack");
     }
 }

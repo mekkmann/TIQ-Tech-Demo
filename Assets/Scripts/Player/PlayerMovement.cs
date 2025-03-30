@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
     public float turnSpeed = 20f;
     public float baseSpeed = 10f;
 
+    private Rigidbody _rb;
+
     private Vector3 _movement;
     private Quaternion _rotation = Quaternion.identity;
     private Animator _animator;
@@ -13,20 +15,22 @@ public class PlayerMovement : MonoBehaviour
 
     private bool _isMoving;
 
+    [Header("Rolling")]
+    [SerializeField] private float _rollForce = 1f;
+    [SerializeField] private bool _canRoll = true;
+    [SerializeField] private bool _isRolling = false;
+    public bool IsRolling => _isRolling;
+    [SerializeField] private float _rollCooldown = 0f;
+    [SerializeField] private AnimationClip _rollAnimation;
+
     #region Input
     private InputAction _move;
     private InputAction _roll;
     #endregion
 
-    // CONSTRUCTOR
-    //public PlayerMovement(InputAction move, InputAction roll)
-    //{
-    //    _move = move;
-    //    _roll = roll;
-    //}
-
     private void OnEnable()
     {
+        _rb = GetComponent<Rigidbody>();
         PlayerControls temp = GetComponent<Player>().PlayerControls;
         _move = temp.Player.Move;
         _move.Enable();
@@ -45,37 +49,39 @@ public class PlayerMovement : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
+
+        _rollCooldown = _rollAnimation.length;
     }
 
     void FixedUpdate()
     {
-        // Joystick
-        //Vector2 tempMove = _move.ReadValue<Vector2>();
+        // Controller
+        Vector2 tempMove = _move.ReadValue<Vector2>();
 
-        //_movement.Set(tempMove.x, 0f, tempMove.y);
-        //_movement.Normalize();
+        _movement.Set(tempMove.x, 0f, tempMove.y);
+        _movement.Normalize();
 
-        //bool hasHorizontalInput = !Mathf.Approximately(_movement.x, 0f);
-        //bool hasVerticalInput = !Mathf.Approximately(_movement.y, 0f);
-        //_isMoving = hasHorizontalInput || hasVerticalInput;
-        //_animator.SetBool("isMoving", _isMoving);
+        bool hasHorizontalInput = !Mathf.Approximately(_movement.x, 0f);
+        bool hasVerticalInput = !Mathf.Approximately(_movement.y, 0f);
+        _isMoving = hasHorizontalInput || hasVerticalInput;
+        _animator.SetBool("isMoving", _isMoving);
 
-        //Vector3 desiredForward = Vector3.RotateTowards(transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
-        //_rotation = Quaternion.LookRotation(desiredForward);
+        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
+        _rotation = Quaternion.LookRotation(desiredForward);
 
-        // quick testing with keyboard mouse
-        float translation = Input.GetAxis("Vertical") * baseSpeed;
-        float rotation = Input.GetAxis("Horizontal") * turnSpeed;
+        //// quick testing with keyboard mouse
+        //float translation = Input.GetAxis("Vertical") * baseSpeed;
+        //float rotation = Input.GetAxis("Horizontal") * turnSpeed;
 
-        // Make it move 10 meters per second instead of 10 meters per frame...
-        translation *= Time.deltaTime;
-        rotation *= Time.deltaTime;
+        //// Make it move 10 meters per second instead of 10 meters per frame...
+        //translation *= Time.deltaTime;
+        //rotation *= Time.deltaTime;
 
-        // Move translation along the object's z-axis
-        transform.Translate(0, 0, translation);
+        //// Move translation along the object's z-axis
+        //transform.Translate(0, 0, translation);
 
-        // Rotate around our y-axis
-        transform.Rotate(0, rotation, 0);
+        //// Rotate around our y-axis
+        //transform.Rotate(0, rotation, 0);
     }
 
     private void OnAnimatorMove()
@@ -83,24 +89,34 @@ public class PlayerMovement : MonoBehaviour
         // Protects against accidental rotation or movement when idling
         if (!_isMoving) return;
 
+
+        if (_isRolling) return;
+
         _rigidbody.MovePosition(_rigidbody.position + baseSpeed * Time.deltaTime * _movement);
         _rigidbody.MoveRotation(_rotation);
     }
 
     #region Rolling
+    private void AddForwardForce()
+    {
+        _rb.AddForce(transform.forward * _rollForce, ForceMode.Impulse);
+    }
+    public void RollResetAnimEvent()
+    {
+        _canRoll = true;
+        _isRolling = false;
+        _animator.ResetTrigger("roll");
+    }
+    public void RollAnimEvent()
+    {
+        _isRolling = true;
+        AddForwardForce();
+    }
     private void Roll(InputAction.CallbackContext context)
     {
-        if (!_isMoving) return;
-
+        if (!_isMoving || !_canRoll) return;
+        _canRoll = false;
         _animator.SetTrigger("roll");
-    }
-    public void SetRollSpeed()
-    {
-        baseSpeed *= 2f;
-    }
-    public void RemoveRollSpeed()
-    {
-        baseSpeed /= 2f;
     }
     #endregion
 }
