@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Jog and Run")]
     public float turnSpeed = 20f;
     public float baseSpeed = 10f;
+    [SerializeField] private float _runSpeed = 15f;
 
     private Rigidbody _rb;
 
@@ -23,9 +25,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _rollCooldown = 0f;
     [SerializeField] private AnimationClip _rollAnimation;
 
+
     #region Input
     private InputAction _move;
     private InputAction _roll;
+    private InputAction _run;
     #endregion
 
     private void OnEnable()
@@ -38,11 +42,15 @@ public class PlayerMovement : MonoBehaviour
         _roll = temp.Player.Roll;
         _roll.Enable();
         _roll.performed += Roll;
+
+        _run = temp.Player.Run;
+        _run.Enable();
     }
     private void OnDisable()
     {
         _move.Disable();
         _roll.Disable();
+        _run.Disable();
     }
 
     void Start()
@@ -68,20 +76,6 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 desiredForward = Vector3.RotateTowards(transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
         _rotation = Quaternion.LookRotation(desiredForward);
-
-        //// quick testing with keyboard mouse
-        //float translation = Input.GetAxis("Vertical") * baseSpeed;
-        //float rotation = Input.GetAxis("Horizontal") * turnSpeed;
-
-        //// Make it move 10 meters per second instead of 10 meters per frame...
-        //translation *= Time.deltaTime;
-        //rotation *= Time.deltaTime;
-
-        //// Move translation along the object's z-axis
-        //transform.Translate(0, 0, translation);
-
-        //// Rotate around our y-axis
-        //transform.Rotate(0, rotation, 0);
     }
 
     private void OnAnimatorMove()
@@ -90,11 +84,36 @@ public class PlayerMovement : MonoBehaviour
         if (!_isMoving) return;
 
 
-        if (_isRolling) return;
+        if (_isRolling || _forcedStop) return;
 
-        _rigidbody.MovePosition(_rigidbody.position + baseSpeed * Time.deltaTime * _movement);
+        float currentSpeed = baseSpeed;
+        if (_run.IsPressed())
+        {
+            currentSpeed = _runSpeed;
+            _animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            _animator.SetBool("isRunning", false);
+        }
+
+        _rigidbody.MovePosition(_rigidbody.position + currentSpeed * Time.deltaTime * _movement);
         _rigidbody.MoveRotation(_rotation);
     }
+
+    #region Moving and Running
+    private bool _forcedStop = false;
+    public void StopMoving(float forThisLong)
+    {
+        _forcedStop = true;
+        Invoke(nameof(StartMoving), forThisLong - (forThisLong / 5));
+    }
+
+    public void StartMoving()
+    {
+        _forcedStop = false;
+    }
+    #endregion
 
     #region Rolling
     private void AddForwardForce()

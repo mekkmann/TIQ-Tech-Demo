@@ -2081,7 +2081,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1274366378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2220,7 +2220,7 @@ MonoBehaviour:
   RecenteringTarget: 2
   HorizontalAxis:
     Value: 0
-    Center: -0
+    Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
     Recentering:
@@ -2551,6 +2551,10 @@ PrefabInstance:
       value: 112
       objectReference: {fileID: 0}
     - target: {fileID: 6083845548711201235, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
+      propertyPath: _runSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6083845548711201235, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
       propertyPath: turnSpeed
       value: 200
       objectReference: {fileID: 0}
@@ -2562,6 +2566,10 @@ PrefabInstance:
       propertyPath: _rollAnimation
       value: 
       objectReference: {fileID: 7400000, guid: 55ef17deb26a93d43a44be934db26acf, type: 2}
+    - target: {fileID: 6420111807092518456, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
+      propertyPath: _lightAttackClip
+      value: 
+      objectReference: {fileID: 7400000, guid: b3c0a6d4ebda3d241883bcddc625d92b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
