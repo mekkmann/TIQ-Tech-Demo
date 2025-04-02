@@ -80,6 +80,8 @@ public class PlayerMovement : MonoBehaviour
         _isMoving = hasHorizontalInput || hasVerticalInput;
         _animator.SetBool("isMoving", _isMoving);
 
+        // TODO: Figure out how to stop CineMachine from impacting movement in an undesirable way
+
         Vector3 desiredForward = Vector3.RotateTowards(transform.forward, _movement, _turnSpeed * Time.deltaTime, 0f);
         _rotation = Quaternion.LookRotation(desiredForward);
     }

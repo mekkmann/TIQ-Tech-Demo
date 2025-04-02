@@ -207,7 +207,6 @@ public class Blocking : StateBase
     }
     public override void Exit()
     {
-        Debug.Log("bish");
         npc.HandleBlocking(false);
         animator.SetBool("isBlocking", false);
         base.Exit();

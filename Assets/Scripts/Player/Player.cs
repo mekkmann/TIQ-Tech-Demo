@@ -24,17 +24,18 @@ public class Player : Character
     {
         _look = PlayerControls.Player.Roll;
         _look.Enable();
-        _look.performed += Look;
+        //_look.performed += Look;
     }
     private void OnDisable()
     {
         _look.Disable();
     }
 
-    private void Look(InputAction.CallbackContext context)
-    {
+    // TODO: Figure out how to make a 3rd person camera controller
+    //private void Look(InputAction.CallbackContext context)
+    //{
 
-    }
+    //}
 
     protected override void Die()
     {
