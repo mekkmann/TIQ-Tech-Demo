@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 public class Player : Character
 {
     private Animator _animator;
-    private Rigidbody _rb;
     public PlayerControls PlayerControls { get; private set; }
 
     #region Input

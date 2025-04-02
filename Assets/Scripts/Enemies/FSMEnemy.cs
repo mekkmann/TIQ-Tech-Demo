@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class FSMEnemy : MonoBehaviour
+public class FSMEnemy : Character
 {
     private enum ActionState { IDLE, MOVING, ATTACKING };
 
@@ -15,23 +15,28 @@ public class FSMEnemy : MonoBehaviour
     [SerializeField] private float _visionAngle = 60f;
     [SerializeField] private string _targetTag = "Player";
     [SerializeField] private GameObject _target;
-    [SerializeField] public AnimationClip AttackAnimation;
+    [SerializeField] private AnimationClip _attackAnimation;
+    public AnimationClip AttackAnimation => _attackAnimation;
 
     [Header("Stats")]
     [SerializeField] private float _moveSpeed = 4f;
     [SerializeField] private float _turnSpeed = 4f;
+    [Range(0f, 1f)]
+    [SerializeField] private float _blockNegation = 0.5f;
+    [SerializeField] private float _minBlockDuration = 1f;
+    [SerializeField] private float _maxBlockDuration = 2f;
 
     public float AcceptableDistanceToTarget => _acceptableDistanceToTarget;
     public bool StateCooldown => _stateCooldown;
     public float VisionAngle => _visionAngle;
     public float AggroDistance => _aggroDistance;
-
+    [SerializeField] private bool _isBlocking = false;
+    public bool IsBlocking => _isBlocking;
 
     [SerializeField] private bool _isBusy = false;
-    public bool IsBusyBool => _isBusy;
+    public bool IsBusy => _isBusy;
 
     private Animator _animator;
-    private Rigidbody _rigidBody;
 
     private StateBase _currentState;
 
@@ -41,7 +46,6 @@ public class FSMEnemy : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _rigidBody = GetComponent<Rigidbody>();
         _target = GameObject.FindGameObjectWithTag(_targetTag);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -54,7 +58,38 @@ public class FSMEnemy : MonoBehaviour
     void Update()
     {
         _currentState = _currentState.Process();
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            TakeDamage(100);
+        }
     }
+
+    #region Blocking and Taking Damage
+    public override void TakeDamage(int damageTaken)
+    {
+        if (_isBlocking)
+        {
+            int damageTakenWhenBlocking = (int)(damageTaken * _blockNegation);
+            base.TakeDamage(damageTakenWhenBlocking);
+            Debug.Log("DMG taken blocking: " + damageTakenWhenBlocking);
+        }
+        else
+        {
+            Debug.Log("DMG taken not blocking: " + damageTaken);
+            base.TakeDamage(damageTaken);
+        }
+    }
+    public void HandleBlocking(bool isBlocking)
+    {
+        _isBlocking = isBlocking;
+    }
+    public float GetRandomBlockDuration()
+    {
+        return Random.Range(_minBlockDuration, _maxBlockDuration);
+    }
+    #endregion
+
     public void HandleIsBusy(bool isBusy)
     {
         _isBusy = isBusy;
@@ -83,9 +118,9 @@ public class FSMEnemy : MonoBehaviour
     }
     private bool TargetNotNull() => _target != null;
 
-    public void MoveToEntity(GameObject target)
+    public void MoveToEntity(GameObject entity)
     {
-        MoveToEntity(target.transform);
+        MoveToEntity(entity.transform);
     }
     public void MoveToEntity(Transform entity)
     {

@@ -1231,12 +1231,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3729266864401819020, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3729266864401819020, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
+      propertyPath: _blockNegation
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3729266864401819020, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
       propertyPath: AttackAnimation
       value: 
       objectReference: {fileID: 7400000, guid: b3c0a6d4ebda3d241883bcddc625d92b, type: 2}
+    - target: {fileID: 3729266864401819020, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
+      propertyPath: _attackAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: b3c0a6d4ebda3d241883bcddc625d92b, type: 2}
+    - target: {fileID: 3729266864401819020, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
+      propertyPath: _maxBlockDuration
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3729266864401819020, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
+      propertyPath: _minBlockDuration
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4144425384332597273, guid: 5fcd0bb1346803e4fa841696a7666987, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2559,8 +2575,16 @@ PrefabInstance:
       value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 6083845548711201235, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
+      propertyPath: _baseSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6083845548711201235, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
       propertyPath: _rollForce
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6083845548711201235, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
+      propertyPath: _turnSpeed
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 6083845548711201235, guid: 298f3715f0b2f6b4d8b69545d34af18e, type: 3}
       propertyPath: _rollAnimation

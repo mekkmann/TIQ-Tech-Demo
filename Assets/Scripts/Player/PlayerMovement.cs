@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Jog and Run")]
-    public float turnSpeed = 20f;
-    public float baseSpeed = 10f;
+    [SerializeField] private float _turnSpeed = 20f;
+    [SerializeField] private float _baseSpeed = 10f;
     [SerializeField] private float _runSpeed = 15f;
 
     private Rigidbody _rb;
@@ -13,7 +13,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _movement;
     private Quaternion _rotation = Quaternion.identity;
     private Animator _animator;
-    private Rigidbody _rigidbody;
 
     private bool _isMoving;
 
@@ -56,12 +55,19 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _rigidbody = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
 
         _rollCooldown = _rollAnimation.length;
     }
 
     void FixedUpdate()
+    {
+        MovementInput();
+    }
+
+    #region Moving and Running
+
+    private void MovementInput()
     {
         // Controller
         Vector2 tempMove = _move.ReadValue<Vector2>();
@@ -74,10 +80,9 @@ public class PlayerMovement : MonoBehaviour
         _isMoving = hasHorizontalInput || hasVerticalInput;
         _animator.SetBool("isMoving", _isMoving);
 
-        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
+        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, _movement, _turnSpeed * Time.deltaTime, 0f);
         _rotation = Quaternion.LookRotation(desiredForward);
     }
-
     private void OnAnimatorMove()
     {
         // Protects against accidental rotation or movement when idling
@@ -86,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (_isRolling || _forcedStop) return;
 
-        float currentSpeed = baseSpeed;
+        float currentSpeed = _baseSpeed;
         if (_run.IsPressed())
         {
             currentSpeed = _runSpeed;
@@ -97,25 +102,25 @@ public class PlayerMovement : MonoBehaviour
             _animator.SetBool("isRunning", false);
         }
 
-        _rigidbody.MovePosition(_rigidbody.position + currentSpeed * Time.deltaTime * _movement);
-        _rigidbody.MoveRotation(_rotation);
+        _rb.MovePosition(_rb.position + currentSpeed * Time.deltaTime * _movement);
+        _rb.MoveRotation(_rotation);
     }
-
-    #region Moving and Running
     private bool _forcedStop = false;
-    public void StopMoving(float forThisLong)
+    public void ForceStop(float forThisLong)
     {
         _forcedStop = true;
-        Invoke(nameof(StartMoving), forThisLong - (forThisLong / 5));
+        Invoke(nameof(UnforceStop), forThisLong - (forThisLong / 5));
     }
 
-    public void StartMoving()
+    public void UnforceStop()
     {
         _forcedStop = false;
     }
     #endregion
 
     #region Rolling
+
+    // TODO: Make sure it feels the same when jogging and running
     private void AddForwardForce()
     {
         _rb.AddForce(transform.forward * _rollForce, ForceMode.Impulse);

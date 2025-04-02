@@ -8,7 +8,7 @@ public abstract class Character : MonoBehaviour
 
     public bool IsDead { get { return isDead; } }
 
-    protected virtual void TakeDamage(int damageTaken)
+    public virtual void TakeDamage(int damageTaken)
     {
         if (isDead) return;
 

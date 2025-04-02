@@ -4,7 +4,7 @@ using UnityEngine;
 // DON'T ALTER ANYTHING IN StateBase APART FROM HELPER METHODS
 public class StateBase
 {
-    public enum STATE { IDLE, PURSUIT, LIGHTATTACK, DEAD }
+    public enum STATE { IDLE, PURSUIT, LIGHTATTACK, DEAD, BLOCKING }
     public enum EVENT { ENTER, UPDATE, EXIT }
 
     public STATE name;
@@ -54,18 +54,6 @@ public class StateBase
         }
         return this;
     }
-
-    // HELPER METHODS
-    protected bool CanSeePlayer()
-    {
-        Vector3 directionToPlayer = player.position - npc.transform.position;
-        float angleToPlayer = Vector3.Angle(directionToPlayer, npc.transform.forward);
-
-        if (directionToPlayer.magnitude < npc.AggroDistance && angleToPlayer < npc.VisionAngle) return true;
-
-        return false;
-
-    }
 }
 // State Implementations
 public class Dead : StateBase
@@ -110,12 +98,18 @@ public class Idle : StateBase
             stage = EVENT.EXIT;
         }
 
-        // Condition to go to Attack from Idle
-        if (npc.IsTargetInAcceptableDistance())
+        // Condition to go to Blocking from Idle (10% success rate)
+        if (npc.IsTargetInAcceptableDistance() && Random.Range(0f, 1f) <= 0.1f)
+        {
+            nextState = new Blocking(npc, animator, player, npc.GetRandomBlockDuration());
+            stage = EVENT.EXIT;
+        }
+        else if (npc.IsTargetInAcceptableDistance()) // Condition to go to Attack from Idle
         {
             nextState = new LightAttack(npc, animator, player, npc.AttackAnimation);
             stage = EVENT.EXIT;
         }
+
         #endregion
     }
 
@@ -160,11 +154,11 @@ public class Pursuit : StateBase
 }
 public class LightAttack : StateBase
 {
-    float attackTimer = -1f;
+    float _attackTimer = -1f;
     public LightAttack(FSMEnemy npc, Animator animator, Transform player, AnimationClip animation) : base(npc, animator, player)
     {
         name = STATE.LIGHTATTACK;
-        attackTimer = animation.length;
+        _attackTimer = animation.length;
     }
     public override void Enter()
     {
@@ -174,8 +168,8 @@ public class LightAttack : StateBase
     public override void Update()
     {
         // TODO: Make it clean by finding a RELIABLE way of checking if animation has finished instead of using a timer
-        attackTimer -= Time.deltaTime;
-        if (attackTimer <= 0)
+        _attackTimer -= Time.deltaTime;
+        if (_attackTimer <= 0)
         {
             nextState = new Idle(npc, animator, player);
             stage = EVENT.EXIT;
@@ -184,6 +178,38 @@ public class LightAttack : StateBase
     public override void Exit()
     {
         animator.ResetTrigger("lightAttack");
+        base.Exit();
+    }
+}
+
+public class Blocking : StateBase
+{
+    private float _blockTimer;
+    public Blocking(FSMEnemy npc, Animator animator, Transform player, float blockTimer = 1f) : base(npc, animator, player)
+    {
+        name = STATE.BLOCKING;
+        _blockTimer = blockTimer;
+    }
+    public override void Enter()
+    {
+        npc.HandleBlocking(true);
+        animator.SetBool("isBlocking", true);
+        base.Enter();
+    }
+    public override void Update()
+    {
+        _blockTimer -= Time.deltaTime;
+        if (_blockTimer <= 0)
+        {
+            nextState = new Idle(npc, animator, player);
+            stage = EVENT.EXIT;
+        }
+    }
+    public override void Exit()
+    {
+        Debug.Log("bish");
+        npc.HandleBlocking(false);
+        animator.SetBool("isBlocking", false);
         base.Exit();
     }
 }

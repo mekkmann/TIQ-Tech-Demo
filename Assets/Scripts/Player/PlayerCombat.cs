@@ -36,7 +36,7 @@ public class PlayerCombat : MonoBehaviour
         if (_playerMovement.IsRolling) return;
 
         // turn off movement for attack
-        _playerMovement.StopMoving(_lightAttackClip.length);
+        _playerMovement.ForceStop(_lightAttackClip.length);
 
         _animator.SetTrigger("lightAttack");
     }
